@@ -3,8 +3,6 @@
     Final Project: Brain Tumor Segmentation (Model Part)
     Hua Wang
 """
-import torch
-from sklearn.model_selection import train_test_split
 from unet.utils import *
 from unet.model import *
 from unet.mylib import *
@@ -28,31 +26,25 @@ def test(unet: Unet, test_img: pd.DataFrame, device, batch_size: int = 10):
     return test_mask_tensor, pred_mask_tensor, pred_dice_score, pred_iou_score
 
 
-def main():
-    root_dir = "./kaggle_3m"
-    # select all file paths into two dataframes
-    masks, contents = extract_paths(root_dir)
-    # sort paths and combine dataframes
-    dir_df = sort_combine_paths(masks, contents)
-    # split training set, validation set and test set, not depend on patient id
-    train_dirs, test_dirs = train_test_split(dir_df, test_size=0.1)
+def run_test(option):
+    # read data from csv
+    test_dirs = pd.read_csv("unet/test_dirs/test_data.csv")
 
     # load my pretrained model
     unet = Unet(3)
-    model_params = torch.load("unet/unet_epoche20_iter40.pth", map_location=torch.device('cpu'))
+    model_params = torch.load(option, map_location=torch.device('cpu'))
     unet.load_state_dict(model_params['model'])
     print("model loaded")
 
     # make prediction with pretrained unet
-    true_mask, pred_mask, pred_dice_score, pred_iou_score = test(unet, test_dirs, torch.device('cpu'), batch_size=20)
-    print("IoU score: %s \n F1 score: %s" % (pred_iou_score.item(), pred_dice_score.item()))
+    true_mask, pred_mask, pred_dice_score, pred_iou_score = test(unet, test_dirs, torch.device('cpu'), batch_size=393)
 
-    # get a view of one test image
-    rand = random.randint(0, 19)
-    view_pred_mask = pred_mask[rand, :]
-    view_true_mask = true_mask[rand, :]
-    show_from_tensor(view_true_mask)
-    show_from_tensor(view_pred_mask)
+    return pred_iou_score.item(), pred_dice_score.item()
+
+
+def main():
+    pred_iou_score, pred_dice_score = run_test("unet/pretrained/unet_epoche23_iter80.pth")
+    print("IoU score: %s \n F1 score: %s" % (pred_iou_score, pred_dice_score))
 
 
 if __name__ == '__main__':

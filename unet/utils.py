@@ -169,15 +169,15 @@ def iou_score(pred, target, smooth: int = 0.001):
     intersect = torch.sum(pred * target)
 
     # union
-    union = torch.ceil((pred + target)/2)
+    union = torch.ceil((pred + target) / 2)
 
     # Jaccard = |A∩B| / |A∪B|
-    iou_score = (intersect + smooth) / (torch.sum(union) + smooth)
+    iou = (intersect + smooth) / (torch.sum(union) + smooth)
 
-    return iou_score
+    return iou
 
 
-def dice_score(pred, target, smooth: int=0.001):
+def dice_score(pred, target, smooth: int = 0.001):
     # flatten pred and target
     pred_flattened = pred.reshape(-1)
     target_flattened = target.reshape(-1)
@@ -189,8 +189,8 @@ def dice_score(pred, target, smooth: int=0.001):
     sum_two = torch.sum(pred_flattened) + torch.sum(target_flattened)
 
     # dice_score = 2 * |A∩B| / (|A| + |B|)
-    dice_score = (2 * intersect + smooth) / (sum_two + smooth)
-    return dice_score
+    dice = (2 * intersect + smooth) / (sum_two + smooth)
+    return dice
 
 
 def tensor_to_np(tensor):
@@ -207,12 +207,3 @@ def show_from_tensor(tensor, title=None):
     if title is not None:
         plt.title(title)
     plt.pause(0.001)
-
-
-def main():
-    # Your code replaces the pass statement here:
-    pass
-
-
-if __name__ == '__main__':
-    main()

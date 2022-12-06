@@ -106,15 +106,24 @@ def train(train_img: pd.DataFrame,
 
 
 def main():
-    root_dir = "../kaggle_3m"
-    # select all file paths into two dataframes
-    masks, contents = extract_paths(root_dir)
-    # sort paths and combine dataframes
-    dir_df = sort_combine_paths(masks, contents)
-    # split training set, validation set and test set, not depend on patient id
-    train_dirs, test_dirs = train_test_split(dir_df, test_size=0.1)
+    root_dir = "./kaggle_3m"
+
+    split = int(input("Would you like to re-split the data (1 for yes, 0 for no)? "))
+
+    if split:
+        # select all file paths into two dataframes
+        masks, contents = extract_paths(root_dir)
+        # sort paths and combine dataframes
+        dir_df = sort_combine_paths(masks, contents)
+        # split training set, validation set and test set, not depend on patient id
+        train_dirs, test_dirs = train_test_split(dir_df, test_size=0.1)
+        # we won't save these data frame because we don't want to overwrite previous data sets.
+    else:
+        # read training data from previous saved csv file
+        train_dirs = pd.read_csv("unet/data_dirs/train_data.csv")
+
     train_dirs, validation_dirs = train_test_split(train_dirs, test_size=0.2)
-    train(train_img=train_dirs, validation_img=validation_dirs, epoch=1, batch_size=16, device_='cuda')
+    train(train_img=train_dirs, validation_img=validation_dirs, epoch=1, batch_size=2, device_='cuda')
 
 
 if __name__ == '__main__':
