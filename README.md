@@ -4,6 +4,10 @@ A UNet model for brain tumor segmentation. Pytorch version. A web app to tune pa
 ### data source
 https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
 
+
+## Install Dependencies
+run `pip install -r requirements.txt` in terminal 
+
 ## Unet
 
 <img src="data/data_analysis/unet_brain_mri.png" style="zoom:30%;" />

@@ -17,7 +17,7 @@ model_dict = {'dice loss + cross entropy loss, lrate = 0.0001': "pretrained1",
               'dice loss + cross entropy loss, lrate = 0.01': "pretrained4",
               'dice loss + cross entropy loss, lrate = 0.1': "pretrained5"}
 
-# import pretrained1 model
+# import pretrained model
 @st.cache
 def load_model(model_name: str):
     unet = model.Unet(3)
