@@ -19,6 +19,7 @@ A web app to visualize learning curves of pretrained models and make prediction 
 3. Train the model by runninng `train.py`:
 
 A quick view of training process:
+ 
 <img src="data/data_analysis/training process.png" style="zoom:80%"/>
 
 ## Make Prediction
