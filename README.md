@@ -24,6 +24,10 @@ To train the model, run `train.py`:
 
 ## Make Prediction
 
-To start the web app, run `streamlit run home.py` in terminal.
+To start the web app on your own computer:
+1. Download project
+2. install dependencies
+3. run `streamlit run home.py` in terminal.
 
+A quick view of prediction page:
 <img src="data/data_analysis/prediction page.png" style="zoom:50%"/>
