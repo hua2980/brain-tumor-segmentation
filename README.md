@@ -1,5 +1,8 @@
 # brain-tumor-segmentation
-A UNet model for brain tumor segmentation. Pytorch version. A web app to tune parameters.
+A UNet model for brain tumor segmentation. Pytorch version. 
+A web app to visualize learning curves of pretrained models and make prediction with pretrained models.
+
+<a href="https://hua2980-brain-tumor-segmentation-home-0fuyzc.streamlit.app">visit web page<a>
 
 ### data source
 https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation
