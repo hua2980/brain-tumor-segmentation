@@ -1,0 +1,4 @@
+use_cel=True,
+epoch=25,
+batch_size=32
+lrate=0.1

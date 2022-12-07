@@ -28,24 +28,20 @@ def test(unet: Unet, test_img: pd.DataFrame, device, batch_size: int = 10):
 
 def run_test(option):
     # read data from csv
-    test_dirs = pd.read_csv("unet/test_dirs/test_data.csv")
+    test_dirs = pd.read_csv("../data/image_dirs/test_data.csv")
 
-    # load my pretrained model
+    # load my pretrained1 model
     unet = Unet(3)
     model_params = torch.load(option, map_location=torch.device('cpu'))
     unet.load_state_dict(model_params['model'])
     print("model loaded")
 
-    # make prediction with pretrained unet
+    # make prediction with pretrained1 unet
     true_mask, pred_mask, pred_dice_score, pred_iou_score = test(unet, test_dirs, torch.device('cpu'), batch_size=393)
 
-    return pred_iou_score.item(), pred_dice_score.item()
-
-
-def main():
-    pred_iou_score, pred_dice_score = run_test("unet/pretrained/unet_epoche23_iter80.pth")
     print("IoU score: %s \n F1 score: %s" % (pred_iou_score, pred_dice_score))
 
 
 if __name__ == '__main__':
-    main()
+    model = "pretrained1"
+    run_test(f"../data/{model}/{model}.pth")

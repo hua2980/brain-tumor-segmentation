@@ -1,0 +1,5 @@
+Loss function: dice loss
+lrate: 0.0001
+optimizer: Adam
+batch size: 32
+epoch: 25

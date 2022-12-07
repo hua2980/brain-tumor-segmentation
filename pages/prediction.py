@@ -11,21 +11,28 @@ from PIL import Image
 from unet.predict import predict
 from unet import model
 
+model_dict = {'dice loss + cross entropy loss, lrate = 0.0001': "pretrained1",
+              'dice loss, lrate = 0.0001': "pretrained2",
+              'dice loss + cross entropy loss, lrate = 0.001': "pretrained3",
+              'dice loss + cross entropy loss, lrate = 0.01': "pretrained4",
+              'dice loss + cross entropy loss, lrate = 0.1': "pretrained5"}
 
-# import pretrained model
+# import pretrained1 model
 @st.cache
 def load_model(model_name: str):
     unet = model.Unet(3)
-    model_params = torch.load(f"unet/pretrained/{model_name}.pth", map_location=torch.device('cpu'))
+    model_params = torch.load(f"data/{model_name}/{model_name}.pth", map_location=torch.device('cpu'))
     unet.load_state_dict(model_params['model'])
     return unet
 
 
 # model option
 st.subheader("Select a pre-trained model:")
-option = st.selectbox("select a model", ('unet_epoche19_iter80', 'unet_epoche20_iter60',
-                                         'unet_epoche21_iter80', 'unet_epoche23_iter80',
-                                         'unet_epoche24_iter20', 'unet_epoche25_iter60',),
+option = st.selectbox("select a model", ('dice loss + cross entropy loss, lrate = 0.0001',
+                                         'dice loss, lrate = 0.0001',
+                                         'dice loss + cross entropy loss, lrate = 0.001',
+                                         'dice loss + cross entropy loss, lrate = 0.01',
+                                         'dice loss + cross entropy loss, lrate = 0.1'),
                       label_visibility='collapsed')
 
 # file uploader
@@ -67,7 +74,7 @@ with col2:
             # get predicted mask image
             st.subheader("Model Prediction:")
             pred_img = st.session_state.img_array / 255
-            pred_mask = predict(pred_img, torch.device('cpu'), load_model(option))
+            pred_mask = predict(pred_img, torch.device('cpu'), load_model(model_dict[option]))
             pred_mask = pred_mask[0].permute(1, 2, 0)
             st.session_state.pred_mask = pred_mask
             st.image(pred_mask.numpy())

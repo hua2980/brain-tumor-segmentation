@@ -1,5 +1,12 @@
+"""
+    CS5001 Fall 2022
+    Assignment number of info
+    Name / Partner
+"""
+
 import numpy
-from sklearn.model_selection import train_test_split
+import rasterio.plot as plot
+
 from unet.utils import *
 from unet.model import *
 from unet.mylib import *
@@ -17,3 +24,12 @@ def predict(test_img: numpy.ndarray, device, unet: Unet):
         pred_mask_tensor = torch.round(pred_mask_tensor)
 
     return pred_mask_tensor
+
+
+def main():
+    # Your code replaces the pass statement here:
+    pass
+
+
+if __name__ == '__main__':
+    main()

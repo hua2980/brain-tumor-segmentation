@@ -43,10 +43,12 @@ def extract_paths(directory):
             # full directory string for the file
             full_dir = os.path.join(root, file_name)
             if "mask" in full_dir:
-                mask_id = int(full_dir[56:-9])
+                mask_id = int(full_dir.split("_")[-2])
+                # mask_id = int(full_dir[56:-9])
                 masks.extend([patient_id, full_dir, mask_id])
             else:
-                content_id = int(full_dir[56:-4])
+                content_id = int(full_dir.split("_")[-1].split(".")[0])
+                # content_id = int(full_dir[56:-4])
                 contents.extend([patient_id, full_dir, content_id])
 
     # split patient_id and full_dir
@@ -74,7 +76,7 @@ def extract_paths(directory):
 
 def sort_combine_paths(masks, contents):
     """
-    The function takes path dataframe for mask images and path dataframe for content images,
+    The function takes path dataframe for mask data_analysis and path dataframe for content data_analysis,
     sorts and combines the two dataframes so that the mask file path and the content file
     path are matched in a single row in a single dataframe
 
@@ -112,7 +114,7 @@ def sort_combine_paths(masks, contents):
 
 def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, batch_size: int = 1):
     """
-    The function read images by paths in df_dir and return content image arrays and mask image arrays.
+    The function read data_analysis by paths in df_dir and return content image arrays and mask image arrays.
     :param start_idx: int
     :param batch_size: int
     :param shuffle: boolean
@@ -130,13 +132,20 @@ def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, b
     # ignore warning
     warnings.filterwarnings("ignore", category=rasterio.errors.NotGeoreferencedWarning)
 
-    # read images and convert into tensor
+    # read data_analysis and convert into tensor
     content_images = []
     mask_images = []
+
+    # extract content path column and mask path column
+    content_paths = df_dir["content_path"]
+    mask_paths = df_dir["mask_path"]
+
     for i in range(batch_size):
         # read content image
-        content_path = df_dir.iloc[start_idx + i, 1]
-        mask_path = df_dir.iloc[start_idx + i, 2]
+        # content_path = df_dir.iloc[start_idx + i, 1]
+        # mask_path = df_dir.iloc[start_idx + i, 2]
+        content_path = content_paths.iloc[start_idx + i]
+        mask_path = mask_paths.iloc[start_idx + i]
 
         # read image by rasterio
         content_image = rasterio.open(content_path).read()
@@ -207,3 +216,13 @@ def show_from_tensor(tensor, title=None):
     if title is not None:
         plt.title(title)
     plt.pause(0.001)
+
+
+def main():
+    # Your code replaces the pass statement here:
+    pass
+
+
+if __name__ == '__main__':
+    main()
+

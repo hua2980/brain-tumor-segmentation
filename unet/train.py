@@ -62,7 +62,7 @@ def train(train_img: pd.DataFrame,
 
     for e in range(epoch):
         for i in range(iteration):
-            # get train images and masks (we drop last few samples)
+            # get train data_analysis and masks (we drop last few samples)
             train_content, train_mask = load_data(train_img,
                                                   start_idx=i * batch_size,
                                                   shuffle=shuffle,
@@ -106,11 +106,14 @@ def train(train_img: pd.DataFrame,
 
 
 def main():
-    root_dir = "./kaggle_3m"
-
     split = int(input("Would you like to re-split the data (1 for yes, 0 for no)? "))
+    epoch = int(input("Set epoch (1-25): "))
+    print("If you're using cuda, the recommended batch size would be 32 or 64.")
+    batch_size = int(input("Set batch size: "))
+    device = input("Set device (cuda or cpu): ")
 
     if split:
+        root_dir = "../kaggle_3m"
         # select all file paths into two dataframes
         masks, contents = extract_paths(root_dir)
         # sort paths and combine dataframes
@@ -120,10 +123,13 @@ def main():
         # we won't save these data frame because we don't want to overwrite previous data sets.
     else:
         # read training data from previous saved csv file
-        train_dirs = pd.read_csv("unet/data_dirs/train_data.csv")
+        train_dirs = pd.read_csv("../data/image_dirs/train_data.csv")
 
     train_dirs, validation_dirs = train_test_split(train_dirs, test_size=0.2)
-    train(train_img=train_dirs, validation_img=validation_dirs, epoch=1, batch_size=2, device_='cuda')
+
+    # start with a small batch size (e.g. 2) to quickly get started
+    # if you're using cuda, the recommended batch size would be 32 or 64
+    train(train_img=train_dirs, validation_img=validation_dirs, epoch=epoch, batch_size=batch_size, device_=device)
 
 
 if __name__ == '__main__':
