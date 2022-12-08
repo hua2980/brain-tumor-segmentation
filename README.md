@@ -17,9 +17,14 @@ A web app to visualize learning curves of pretrained models and make prediction 
 1. Download project
 2. Install dependencies by runing `pip install -r requirements.txt` in terminal 
 3. Train the model by runninng `train.py`:
+<<<<<<< HEAD
 
 A quick view of training process:
+=======
+>>>>>>> fe160186bff7084cb02b151d17305b407f82ecd6
 
+A quick view of training process:
+ 
 <img src="data/data_analysis/training process.png" style="zoom:80%"/>
 
 ## Make Prediction
@@ -30,5 +35,8 @@ To start the web app on your own computer:
 3. open the page by running `streamlit run home.py` in terminal.
 
 A quick view of prediction page:
+<<<<<<< HEAD
 
+=======
+>>>>>>> fe160186bff7084cb02b151d17305b407f82ecd6
 <img src="data/data_analysis/prediction page.png" style="zoom:50%"/>
