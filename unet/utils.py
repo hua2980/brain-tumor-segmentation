@@ -1,7 +1,7 @@
 """
     CS5001 Fall 2022
     Final Project: Brain Tumor Segmentation
-    (Model part: utilities)
+    - Utility functions
     Hua Wang
 """
 

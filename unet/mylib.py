@@ -1,7 +1,7 @@
 """
     CS5001 Fall 2022
     Final Project: Brain Tumor Segmentation
-    (Model part: my customized tool layers)
+    - Customized tool layers
     Hua Wang
 """
 
@@ -14,9 +14,13 @@ class DoubleConv(nn.Module):
     """
     double_conv layer contains two convolutional layer
     Conv2d -> BatchNorm2d -> ReLU -> Conv2d -> BatchNorm2d -> ReLU
-    the layer does not contain a max pooling layer because its output is useful for up-sampling
     """
     def __init__(self, in_channel, out_channel):
+        """
+        Constructor -- create a new DoubleConv layer
+        :param in_channel: input channel size
+        :param out_channel: output channel size
+        """
         # inherited properties passed from nn.Module
         super(DoubleConv, self).__init__()
         # define mid channel
@@ -26,28 +30,39 @@ class DoubleConv(nn.Module):
         self.double_conv = nn.Sequential(
             # out_channel means how many convolutional kernels are we using
             # padding = 'same' keeps image size (HxW)
-            nn.Conv2d(self.in_channel, self.mid_channel, kernel_size=3, padding='same'),
-            # batch normalization making sure values in feature map follows normal distribution
+            nn.Conv2d(self.in_channel, self.mid_channel,
+                      kernel_size=3, padding='same'),
+            # batch normalization making sure values
+            # in feature map follows normal distribution
             nn.BatchNorm2d(self.mid_channel),
-            # an activation layer after each convolutional layer. Turn on inplace to save memory
+            # an activation layer after each convolutional layer.
+            # Turn on inplace to save memory
             nn.ReLU(inplace=True),
 
-            nn.Conv2d(self.mid_channel, self.out_channel, kernel_size=3, padding='same'),
+            nn.Conv2d(self.mid_channel, self.out_channel,
+                      kernel_size=3, padding='same'),
             nn.BatchNorm2d(self.out_channel),
             nn.ReLU(inplace=True),
         )
 
     def forward(self, input_layer):
         """
-        The forward function passes input_layer through the double convolutional layer.
-        :param input_layer: tensor [batch size, input channel size, H, W]
-        :return: tensor [batch size, output channel size, H, W]
+        Method -- The forward function passes input_layer through
+                    the double convolutional layer.
+
+        :param input_layer: tensor [batch size, in_channel, H, W]
+        :return: tensor [batch size, out_channel, H, W]
         """
         output_layer = self.double_conv(input_layer)
         return output_layer
 
 
 class Up(nn.Module):
+    """
+    Up layer containing an inverse convolution layer
+    and a double convolution layer
+    ConvTranspose2d -> DoubleConv
+    """
     def __init__(self, in_channel, out_channel):
         # out_channel is 2 * in_channel
         super(Up, self).__init__()
@@ -101,7 +116,6 @@ class MyLoss(nn.Module):
 
 
 def main():
-    # Your code replaces the pass statement here:
     pass
 
 
