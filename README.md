@@ -6,26 +6,25 @@ A web app to visualize learning curves of pretrained models and make prediction 
  
 <a href="https://www.kaggle.com/datasets/mateuszbuda/lgg-mri-segmentation">data source<a>
 
+## video introduction
+Here is a <a href="https://www.youtube.com/watch?v=JOVjGr18WJA">video Introduction<a> about my project
+
 ## Unet
 
-<img src="data/data_analysis/unet_brain_mri.png" style="zoom:30%;" />
+<img src="data/data_analysis/unet_brain_mri.png" style="zoom:30%;"  alt=""/>
 
 
 ## Training Model
 
- To start the web app on your own computer:
+ To train the model on your own computer:
 1. Download project
 2. Install dependencies by runing `pip install -r requirements.txt` in terminal 
 3. Train the model by runninng `train.py`:
 <<<<<<< HEAD
 
 A quick view of training process:
-=======
->>>>>>> fe160186bff7084cb02b151d17305b407f82ecd6
-
-A quick view of training process:
  
-<img src="data/data_analysis/training process.png" style="zoom:80%"/>
+<img src="data/data_analysis/training process.png" style="zoom:80%" alt=""/>
 
 ## Make Prediction
 
@@ -35,8 +34,4 @@ To start the web app on your own computer:
 3. open the page by running `streamlit run home.py` in terminal.
 
 A quick view of prediction page:
-<<<<<<< HEAD
-
-=======
->>>>>>> fe160186bff7084cb02b151d17305b407f82ecd6
 <img src="data/data_analysis/prediction page.png" style="zoom:50%"/>
