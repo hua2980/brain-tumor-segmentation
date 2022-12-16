@@ -7,7 +7,7 @@
 
 from sklearn.model_selection import train_test_split
 from unet.model import *
-from unet.utils import *
+from unet.util import *
 import torch
 
 
@@ -59,7 +59,6 @@ def train(train_img: pd.DataFrame,
     """
     Train the model based on training set, given file directories to load
     the training set and validation set
-
     :param train_img: dataframe, file directories for training data
     :param validation_img: dataframe, file directories for validation data
     :param lr: float, learning rate

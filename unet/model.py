@@ -41,7 +41,6 @@ class Unet(nn.Module):
         """
         Method -- The forward function passes the input tenser through the
                     U-Net and returns the predicted result
-
         :param in_input: tensor, [batch size, in_channel, H, W]
         :return: tensor, predicted result, [batch size, 1, H, W]
         """

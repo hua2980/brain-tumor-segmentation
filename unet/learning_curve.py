@@ -50,7 +50,6 @@ def convert_dict_to_df(loss_accuracy_dict, columns):
     """
     Convert the loss_accuracy_dict into a dataframe
     with customized column names
-
     :param loss_accuracy_dict: dictionary
     :param columns: column names for the dataframe
     :return: df, dataframe
@@ -93,7 +92,7 @@ def calculate_mean_per_10_instances(df, iteration_col, band_col, band_num):
 
 def draw_accuracy_curve(df, x_col, y_col, title='', x_label='', y_label=''):
     """
-    Draw an accuracy curve.
+    Draw an accuracy curve
     :param df: dataframe that stores accuracies for every training instance
     :param x_col: training instance column name, string
     :param y_col: accuracy column name, string
@@ -221,9 +220,9 @@ def plot_curves_multi_model(model_list, label_list, file_name):
 
 
 if __name__ == '__main__':
-    plot_curves_one_model("pretrained1")
+    plot_curves_one_model("pretrained2")
     plot_curves_multi_model(
         ["pretrained1", "pretrained3", "pretrained4", "pretrained5"],
-        ["lrate=0.0001", "lrate=0.001", "lrate=0.01", "lrate=0.1"],
+        ["l_rate=0.0001", "l_rate=0.001", "l_rate=0.01", "l_rate=0.1"],
         "accuracy_curves_multiple_loss"
     )

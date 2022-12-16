@@ -1,0 +1,6 @@
+Model,IOU score,Dice score
+"dice loss + cross entropy loss, l_rate = 0.0001",0.7465402,0.8548798
+"dice loss, l_rate = 0.0001",0.7388876,0.8498393
+"dice loss + cross entropy loss, l_rate = 0.001",0.7465402,0.8548789
+"dice loss + cross entropy loss, l_rate = 0.01",0.7522497,0.8586102
+"dice loss + cross entropy loss, l_rate = 0.1",0.7797701,0.8762593

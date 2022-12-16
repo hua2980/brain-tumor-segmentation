@@ -17,15 +17,14 @@ import matplotlib.pyplot as plt
 
 def extract_paths(directory):
     """
-    The function reads all files names in the given root directory and returns two
-    dataframe: contents and masks.
-
+    The function reads all files names in the given root directory and returns
+    two dataframe: contents and masks
     :param directory: str
     :return:
     contents:
-            dataframe containing info of content image paths and content image id
+            dataframe containing info of content image paths and id
     masks:
-            dataframe contain info of mask image path and mask image id
+            dataframe contain info of mask image path and id
     """
 
     masks = []
@@ -35,7 +34,7 @@ def extract_paths(directory):
         # extract patient id from root path
         patient_id = root.split("/")[-1]
 
-        # skip the main file
+        # skip irrelevant file
         if "TCGA" not in patient_id:
             continue
 
@@ -76,10 +75,10 @@ def extract_paths(directory):
 
 def sort_combine_paths(masks, contents):
     """
-    The function takes path dataframe for mask data_analysis and path dataframe for content data_analysis,
-    sorts and combines the two dataframes so that the mask file path and the content file
-    path are matched in a single row in a single dataframe
-
+    The function takes path dataframe for mask data_analysis and path dataframe
+    for content data_analysis, sorts and combines the two dataframes so that
+    the mask file path and the content file path are matched in a single row
+    in a single dataframe
     :param masks: dataframe
     :param contents: dataframe
     :return: dataframe
@@ -87,10 +86,9 @@ def sort_combine_paths(masks, contents):
 
     # sort dataframes with a key function, making sure that mask path and
     # content path is corresponding to each other at each row index
-    contents = contents.sort_values(by=["patient_id", "content_id"], ignore_index=True)
+    contents = contents.sort_values(
+        by=["patient_id", "content_id"], ignore_index=True)
     masks = masks.sort_values(by=["patient_id", "mask_id"], ignore_index=True)
-    # contents = sorted(original_contents["full_content_dir"].values, key=lambda x: int(x[56:-4]))
-    # masks = sorted(masks["full_mask_dir"].values, key=lambda x: int(x[56:-9]))
 
     # combine two dataframe together
     content_paths = contents.iloc[:, 1]
@@ -112,9 +110,15 @@ def sort_combine_paths(masks, contents):
     return dir_df
 
 
-def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, batch_size: int = 1):
+def load_data(
+        df_dir: pd.DataFrame,
+        start_idx: int = 0,
+        shuffle: bool = False,
+        batch_size: int = 1):
     """
-    The function read data_analysis by paths in df_dir and return content image arrays and mask image arrays.
+    The function reads data_analysis by paths in df_dir
+    and return content image
+    arrays and mask image arrays
     :param start_idx: int
     :param batch_size: int
     :param shuffle: boolean
@@ -130,7 +134,8 @@ def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, b
         raise IndexError("batch size is too large")
 
     # ignore warning
-    warnings.filterwarnings("ignore", category=rasterio.errors.NotGeoreferencedWarning)
+    warnings.filterwarnings("ignore",
+                            category=rasterio.errors.NotGeoreferencedWarning)
 
     # read data_analysis and convert into tensor
     content_images = []
@@ -142,8 +147,6 @@ def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, b
 
     for i in range(batch_size):
         # read content image
-        # content_path = df_dir.iloc[start_idx + i, 1]
-        # mask_path = df_dir.iloc[start_idx + i, 2]
         content_path = content_paths.iloc[start_idx + i]
         mask_path = mask_paths.iloc[start_idx + i]
 
@@ -158,20 +161,28 @@ def load_data(df_dir: pd.DataFrame, start_idx: int = 0, shuffle: bool = False, b
 
 def adjust_data(img, mask):
     """
-    The function rescaled data in img to [0, 1] and convert data in mask to binary
+    The function rescales data in img to [0, 1] and
+    convert data in mask to binary
     :param img: dataframe
     :param mask: dataframe
     :return: dataframes
     """
     img = img / 255
     mask = mask / 255
-    mask[mask > 0.5] = 1
-    mask[mask <= 0.5] = 0
+    mask[mask > 0.5] = 1.0
+    mask[mask <= 0.5] = 0.0
 
     return img, mask
 
 
-def iou_score(pred, target, smooth: int = 0.001):
+def iou_score(pred, target, smooth: float = 0.001):
+    """
+    The function calculates IOU score between pred tensor and target tensor
+    :param pred: tensor
+    :param target: tensor
+    :param smooth: float
+    :return: tensor
+    """
     pred = torch.round(pred)  # convert into binary mask
 
     # intersection
@@ -180,13 +191,20 @@ def iou_score(pred, target, smooth: int = 0.001):
     # union
     union = torch.ceil((pred + target) / 2)
 
-    # Jaccard = |A∩B| / |A∪B|
+    # iou_loss = |A∩B| / |A∪B|
     iou = (intersect + smooth) / (torch.sum(union) + smooth)
 
     return iou
 
 
-def dice_score(pred, target, smooth: int = 0.001):
+def dice_score(pred, target, smooth: float = 0.001):
+    """
+    The function calculates dice score between pred tensor and target tensor
+    :param pred: tensor
+    :param target: tensor
+    :param smooth: float
+    :return: tensor
+    """
     # flatten pred and target
     pred_flattened = pred.reshape(-1)
     target_flattened = target.reshape(-1)
@@ -203,12 +221,24 @@ def dice_score(pred, target, smooth: int = 0.001):
 
 
 def tensor_to_np(tensor):
+    """
+    The function rescales and converts tensor [1, in_channel, H, W]
+    into np.array [in_channel, H, W]
+    :param tensor: tensor [1, in_channel, H, W]
+    :return: np.array [in_channel, H, W]
+    """
     img = tensor.mul(255).byte()
     img = img.cpu().numpy().squeeze(0)
     return img
 
 
 def show_from_tensor(tensor, title=None):
+    """
+    The function visualizes a tensor [1, in_channel, H, W]
+    :param tensor:
+    :param title:
+    :return:
+    """
     img = tensor.clone()
     img = tensor_to_np(img)
     plt.figure()
@@ -216,13 +246,3 @@ def show_from_tensor(tensor, title=None):
     if title is not None:
         plt.title(title)
     plt.pause(0.001)
-
-
-def main():
-    # Your code replaces the pass statement here:
-    pass
-
-
-if __name__ == '__main__':
-    main()
-

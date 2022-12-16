@@ -15,6 +15,7 @@ class DoubleConv(nn.Module):
     double_conv layer contains two convolutional layer
     Conv2d -> BatchNorm2d -> ReLU -> Conv2d -> BatchNorm2d -> ReLU
     """
+
     def __init__(self, in_channel, out_channel):
         """
         Constructor -- create a new DoubleConv layer
@@ -48,8 +49,7 @@ class DoubleConv(nn.Module):
     def forward(self, input_layer):
         """
         Method -- The forward function passes input_layer through
-                    the double convolutional layer.
-
+                    the double convolutional layer
         :param input_layer: tensor [batch size, in_channel, H, W]
         :return: tensor [batch size, out_channel, H, W]
         """
@@ -63,18 +63,36 @@ class Up(nn.Module):
     and a double convolution layer
     ConvTranspose2d -> DoubleConv
     """
+
     def __init__(self, in_channel, out_channel):
+        """
+        Constructor -- create a new Up layer
+        :param in_channel: input channel size
+        :param out_channel: output channel size
+        """
         # out_channel is 2 * in_channel
         super(Up, self).__init__()
         self.mid_channel = out_channel
         # an up-conv layer
         # H_out = (H_in - 1) * stride - 2 * padding + kernel_size
-        self.up = nn.ConvTranspose2d(in_channel, self.mid_channel, stride=2, kernel_size=2)
+        self.up = nn.ConvTranspose2d(in_channel,
+                                     self.mid_channel,
+                                     stride=2,
+                                     kernel_size=2)
         # a DoubleConv layer
-        # input channel size is 2 * mid channel size because we need to concatenate
+        # input channel size is 2 * mid channel size
+        # because we need to concatenate
         self.double_conv = DoubleConv(self.mid_channel * 2, out_channel)
 
     def forward(self, input_layer1, input_layer2):
+        """
+        Method -- The forward function concatenate input_layer1 and
+                  input_layer2, and passes the result layer through
+                  the double_conv layer
+        :param input_layer1: tensor [batch size, in_channel, H, W]
+        :param input_layer2: tensor [batch size, in_channel, H, W]
+        :return: tensor [batch size, out_channel, H, W]
+        """
         input_layer1 = self.up(input_layer1)
         input_layer = cat((input_layer1, input_layer2), dim=1)  # axis: channel
         output_layer = self.double_conv(input_layer)
@@ -82,14 +100,31 @@ class Up(nn.Module):
 
 
 class MyLoss(nn.Module):
+    """
+    MyLoss layer calculate the loss of the prediction layer
+    Two Loss Mode: Dice loss or IOU loss
+    """
+
     def __init__(self, dice_loss_mode: bool = True, smooth: float = 0.01):
+        """
+        Constructor -- create a new MyLoss layer
+        :param dice_loss_mode: bool, use dice loss
+        :param smooth: float
+        """
         super(MyLoss, self).__init__()
         self.dice_loss_mode = dice_loss_mode
         self.smooth = smooth
         return
 
     def forward(self, pred, target):
+        """
+        Method -- The forward function calculate the loss between
+                    the pred and the target using a specific loss mode.
 
+        :param pred: tensor [batch size, in_channel, H, W]
+        :param target: tensor [batch size, in_channel, H, W]
+        :return: tensor
+        """
         if self.dice_loss_mode:
             # flatten pred and target
             pred_flattened = pred.reshape(-1)
@@ -108,16 +143,9 @@ class MyLoss(nn.Module):
             intersect = torch.sum(pred * target)
 
             # union
-            union = torch.ceil((pred + target)/2)
+            union = torch.ceil((pred + target) / 2)
 
-            # Jaccard = |A∩B| / |A∪B|
-            loss = - (intersect + self.smooth) / (torch.sum(union) + self.smooth)
+            # iou_loss = |A∩B| / |A∪B|
+            loss = - (intersect + self.smooth) / (torch.sum(union) +
+                                                  self.smooth)
         return loss
-
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()

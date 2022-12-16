@@ -4,7 +4,7 @@
     - Testing a pretrained model
     Hua Wang
 """
-from unet.utils import *
+from unet.util import *
 from unet.model import *
 from unet.mylib import *
 from unet.train import validation
@@ -34,5 +34,5 @@ def run_test(option):
 
 
 if __name__ == '__main__':
-    model = "pretrained1"
+    model = "pretrained5"
     run_test(f"../data/{model}/{model}.pth")
